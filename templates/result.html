@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+
+
+{% block body %}
+
+<h1>There are {{number_of_students}} students present in classrooom</h1>
+<h2>Out of them {{known_count}} are known and {{unknown_count}} are unknown</h2>
+<h3>Students are :</h3>
+{% for student in face_names %}
+
+{{student}}
+<br>
+{% endfor %}
+<a href="{{url_for('upload')}}">back</a>
+
+{% endblock %}
