@@ -1,11 +1,10 @@
-{% extends 'layout.html' %}
+{% extends 'layout.html' %} {% block body %}
 
-{% block body %}
+<h1>
+  Attendence using face recognition
+</h1>
 
-index
-<hr>
-
-<a href="{{url_for('upload')}}">Upload image</a>
-<br>
-<a href="{{url_for('capture')}}">Capture</a>
+<a href="{{ url_for('upload') }}">Upload image</a>
+<br />
+<a href="{{ url_for('capture') }}">Capture</a>
 {% endblock %}

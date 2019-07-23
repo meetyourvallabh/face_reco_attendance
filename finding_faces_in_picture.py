@@ -2,7 +2,7 @@ from PIL import Image
 import face_recognition
 
 # Load the jpg file into a numpy array
-image = face_recognition.load_image_file("dot_matrix.jpg")
+image = face_recognition.load_image_file("train_image.jpg")
 
 # Find all the faces in the image using the default HOG-based model.
 # This method is fairly accurate, but not as accurate as the CNN model and not GPU accelerated.
@@ -15,9 +15,10 @@ for face_location in face_locations:
 
     # Print the location of each face in this image
     top, right, bottom, left = face_location
-    print("A face is located at pixel location Top: {}, Left: {}, Bottom: {}, Right: {}".format(top, left, bottom, right))
+    print("A face is located at pixel location Top: {}, Left: {}, Bottom: {}, Right: {}".format(
+        top, left, bottom, right))
 
     # You can access the actual face itself like this:
-    face_image = image[top:bottom, left:right]
+    face_image = image[top-100:bottom+100, left-100:right+100]
     pil_image = Image.fromarray(face_image)
     pil_image.show()

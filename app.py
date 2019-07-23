@@ -5,6 +5,8 @@ import datetime
 from flask_pymongo import PyMongo
 import face_recognition
 from flask_mail import Mail, Message
+import pickle
+from PIL import Image
 
 app = Flask(__name__)
 
@@ -83,13 +85,19 @@ def result():
         "Shreya Wani"
     ]
 
+    # with open('dataset_faces.dat', 'rb') as f:
+    #    known_face_encodings = pickle.load(f)
+#
+    # with open('dataset_names.dat', 'rb') as f:
+    #    known_face_names = pickle.load(f)
+#
     final_path = session['image_path']
     image = face_recognition.load_image_file(final_path)
     face_locations = face_recognition.face_locations(image)
     face_encodings = face_recognition.face_encodings(image, face_locations)
     face_names = []
 
-    for face_encoding in face_encodings:
+    for face_encoding, face_location in zip(face_encodings, face_locations):
             # See if the face is a match for the known face(s)
         matches = face_recognition.compare_faces(
             known_face_encodings, face_encoding, 0.5)
@@ -104,10 +112,17 @@ def result():
         else:
             unknown_count = unknown_count+1
 
+            top, right, bottom, left = face_location
+            print("A face is located at pixel location Top: {}, Left: {}, Bottom: {}, Right: {}".format(
+                top, left, bottom, right))
+            face_image = image[top-100:bottom+100, left-100:right+100]
+            pil_image = Image.fromarray(face_image)
+            pil_image.show()
+
         face_names.append(name)
 
     number_of_students = len(face_locations)
-    print(number_of_students)
+    # print(number_of_students)
     os.remove(final_path)
     session['image_path'] = ''
     return render_template('result.html', number_of_students=number_of_students, face_names=face_names, known_count=known_count, unknown_count=unknown_count)
@@ -115,4 +130,4 @@ def result():
 
 if __name__ == '__main__':
     app.secret_key = 'secret123'
-    app.run(host='0.0.0.0', debug='true', port='443', ssl_context='adhoc')
+    app.run(host='0.0.0.0', debug='true', port='5000')
